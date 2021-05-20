@@ -19,7 +19,13 @@ var res = {
     ZCSD_POPUP_MINI_GAME:"zcsd/game/mini_game/PopupMiniGame.json",
 
     //images
-    Slot1_png : "zcsd/slot1.png"
+    Slot1_png : "zcsd/slot1.png",
+
+    //game tilesets:
+    GAME_MAP : "assests/game/Asset/map",
+
+    //monster
+    GAME_MONSTER : "assests/game/Asset/monster/frame"
 };
 
 var g_resources = [
