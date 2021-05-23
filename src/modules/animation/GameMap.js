@@ -3,7 +3,7 @@ var GameMap = cc.Class.extend({
     floor:[],
     x:0,
     y:0,
-    ratio:0.75,
+    ratio:1,
     monster:[],
     obstacle:[],
     typeOfMons:5,
@@ -19,22 +19,26 @@ var GameMap = cc.Class.extend({
                 var tempSprite = cc.Sprite.create(fileName);
 
                 if (this.tileSize == null) {
-                    this.tileSize = cc.size(tempSprite.width, tempSprite.height);
+                    this.tileSize = cc.size(tempSprite.width, tempSprite.height - 14);
                 }
                 screen.addChild(tempSprite, 0);
                 tempSprite.setPosition(this.x + i * tempSprite.width, this.y + j * (tempSprite.height - 14));
                 this.floor.push(tempSprite);
             }
         }
+        //cc.log([this.floor[48].getPosition().x, this.floor[48].getPosition().y])
         this.initRandomObstacle(screen);
         //this.schedule(this.createMonster, rand(1, 2));
     },
     initRandomObstacle:function(screen) {
         var numObs = rand(5, 7);
+        //var numObs = 1;
         var set = new Set();
+        //cc.log(numObs);
         while(set.size < numObs) {
             var x = rand(0, this.mapSize - 1);
             var y = rand(0, this.mapSize - 1);
+            //var x = 0, y = 0;
             //cc.log(x * this.mapSize + y);
 
             if (set.has(x * this.mapSize + y) || this.isObstacleNear(set, x, y)) {
@@ -43,9 +47,10 @@ var GameMap = cc.Class.extend({
             }
             else {
                 set.add(x * this.mapSize + y);
-                var worldPos = this.convertPosToWorld();
-                var typeObs = rand(0, 2);
+                var worldPos = this.convertPosToWorld(x, y);
+                var typeObs = rand(1, 3);
                 var tempObstacle = new Obstacle(worldPos.x, worldPos.y, typeObs, screen);
+                //cc.log(tempObstacle.sprite);
                 this.obstacle.push(tempObstacle);
             }
         } 
@@ -66,6 +71,7 @@ var GameMap = cc.Class.extend({
         this.y = y;
     },
     update:function() {
+        this.schedule(this.createMonster(), 3);
     },
     createMonster:function() {  
         var monsterType = rand(0, typeOfMons - 1);
@@ -78,8 +84,14 @@ var GameMap = cc.Class.extend({
         // }
     },
     convertPosToWorld:function(x, y) {
-        x = this.x + x * this.tileSize.width;
-        y = this.y + y * this.tileSize.height;
+        var leftMostAnchor = cc.p(this.x - this.mapSize * this.tileSize.width / 2 * this.ratio, this.y - this.mapSize * this.tileSize.height / 2 * this.ratio);
+        x = leftMostAnchor.x + x * this.tileSize.width + this.tileSize.width / 2 * this.ratio;
+        y = leftMostAnchor.y + y * this.tileSize.height + this.tileSize.height / 2 * this.ratio;
+        //cc.log([x, y]);
+        //cc.log([leftMostAnchor.x, leftMostAnchor.y]);
+        //var test = this.floor[48].getPosition();
+        cc.log([test.x, test.y]);
+        cc.log([x, y]);
         return cc.p(x, y);
     }
 })
