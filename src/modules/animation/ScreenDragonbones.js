@@ -2,7 +2,6 @@
  * Created by GSN on 7/9/2015.
  */
 
-
 var ScreenDragonbones = cc.Layer.extend({
     _itemMenu:null,
     _beginPos:0,
